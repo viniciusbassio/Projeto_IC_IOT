@@ -1,56 +1,47 @@
-🌦️ Estação Meteorológica IoT – ESP32 + MicroPython
+🌎 IoT Climate Data Pipeline – ESP32 + MicroPython
 
-Projeto de iniciação científica para coleta de dados climáticos utilizando ESP32 + MicroPython, com foco em:
+Projeto de Engenharia de Dados aplicado a IoT, focado na construção de uma estação meteorológica resiliente com coleta estruturada, sincronização temporal confiável e arquitetura preparada para integração com pipelines de dados.
 
-Aquisição de dados ambientais
+🎯 Visão do Projeto
 
-Padronização em JSON
+Desenvolver uma estação meteorológica de baixo custo capaz de:
 
-Sincronização de horário via NTP
+Coletar dados ambientais em tempo real
 
-Tolerância a falhas de conexão (buffer local)
+Garantir integridade temporal via NTP
 
-Preparação para integração com MQTT / pipeline de dados
+Operar com tolerância a falhas de rede
 
-📌 Objetivo
+Estruturar dados em JSON padronizado
 
-Construir uma estação meteorológica de baixo custo capaz de:
+Preparar os dados para ingestão via MQTT ou pipeline ETL
 
-Medir variáveis climáticas
+O projeto simula um cenário real de Edge Computing aplicado à Engenharia de Dados.
 
-Gerar dados estruturados
+🏗️ Arquitetura Atual
+Sensores → ESP32 (Edge Layer)
+            ↓
+        Processamento local
+            ↓
+     Padronização JSON
+            ↓
+   Buffer Offline (Resiliência)
+            ↓
+     Pronto para envio (MQTT / HTTP)
 
-Operar mesmo com falhas de rede
+🔎 Variáveis Coletadas
 
-Servir como base para um futuro pipeline ETL de dados climáticos
+Temperatura (°C)
 
-🧰 Hardware Utilizado
+Umidade Relativa (%)
 
-ESP32 DOIT DevKit (ESP32-WROOM-32)
+Luminosidade (classificação)
 
-Sensor DHT11 (Temperatura e Umidade)
+Timestamp ISO 8601 (UTC-3)
 
-Sensor LDR (Luminosidade – módulo digital)
+Identificação da estação
 
-Protoboard + Jumpers
-
-Fonte externa 12V 1A (para módulo da protoboard)
-
-📊 Variáveis Coletadas
-
-Atualmente o sistema coleta:
-
-🌡️ Temperatura (°C)
-
-💧 Umidade relativa do ar (%)
-
-💡 Luminosidade (CLARO / ESCURO)
-
-🕒 Timestamp ISO 8601 (UTC-3 Brasil)
-
-🏷️ Identificação da estação
-
-Exemplo de saída:
+Exemplo de payload:
 
 {
   "estacao": "adamantina_01",
@@ -60,106 +51,91 @@ Exemplo de saída:
   "luminosidade": "CLARO"
 }
 
-🌐 Conectividade
+🧠 Decisões Técnicas Implementadas
+✅ Sincronização Temporal Confiável
 
-Conexão WiFi automática
+Uso de NTP para garantir precisão temporal
 
-Sincronização de horário via NTP
+Conversão para ISO 8601
 
-Ajuste manual de offset UTC-3 (Brasil)
+Ajuste para UTC-3 (Brasil)
 
-🧠 Arquitetura Atual
+✅ Arquitetura Offline-First
 
-Fluxo de execução:
+Implementação de buffer local
 
-Conecta ao WiFi
+Prevenção de perda de dados em caso de falha de conexão
 
-Sincroniza horário via NTP
+Estrutura preparada para flush automático ao restabelecer rede
 
-Lê sensores
+✅ Padronização de Dados
 
-Gera JSON estruturado
+Estrutura JSON consistente
 
-Armazena em buffer caso falhe conexão
+Preparação para ingestão por sistemas downstream
 
-Aguarda 60 segundos
+Facilita ETL, armazenamento em Data Lake ou banco relacional
 
-Repete
+⚙️ Stack Tecnológica
 
-💾 Sistema de Buffer (Offline First)
-
-Caso a conexão caia:
-
-Os dados são armazenados localmente
-
-São reenviados quando a conexão retorna
-
-Evita perda de dados
-
-Garante integridade para análises futuras
-
-Esse modelo permite evolução para:
-
-Deep Sleep
-
-MQTT
-
-Armazenamento rotativo
-
-Pipeline ETL automatizado
-
-🔜 Próximas Evoluções Planejadas
-
- Integração com BMP280 (pressão atmosférica)
-
- Integração com GUVA-S12S (radiação UV)
-
- Implementação de MQTT
-
- Deep Sleep para economia de energia
-
- Rotação inteligente de arquivos
-
- Envio para banco de dados
-
- Construção de pipeline ETL
-
- Dashboard de visualização (Power BI / Python / Grafana)
-
-🚀 Tecnologias Envolvidas
+ESP32 (Edge Computing)
 
 MicroPython
 
-ESP32
-
-NTP
+NTP (Time Sync)
 
 JSON
 
-Arquitetura resiliente
+Conceitos de Buffer Resiliente
 
-Conceitos de IoT
+Arquitetura IoT
 
-Conceitos de Engenharia de Dados
+🔜 Roadmap Técnico
 
-🎯 Aplicação Acadêmica
+Integração com BMP280 (pressão atmosférica)
 
-Projeto desenvolvido no contexto de iniciação científica com foco em:
+Integração com sensor UV (GUVA-S12S)
 
-Coleta de dados climáticos regionais
+Implementação de MQTT (modelo publish/subscribe)
 
-Estruturação de dados para ciência de dados
+Deep Sleep para eficiência energética
 
-Análise estatística e modelagem futura
+Rotação inteligente de arquivos
 
-📌 Estrutura do Projeto
-/main.py
-/README.md
+Pipeline ETL para armazenamento estruturado
 
+Dashboard analítico (Power BI / Python / Grafana)
 
-(Estrutura será expandida conforme novas funcionalidades forem adicionadas)
+🧩 Conceitos Demonstrados
 
-📎 Status do Projeto
+Este projeto demonstra conhecimento prático em:
 
-🟡 Em desenvolvimento
-Versão atual: coleta + JSON + NTP + buffer local
+Engenharia de Dados aplicada a IoT
+
+Resiliência e tolerância a falhas
+
+Sincronização temporal distribuída
+
+Estruturação de dados para análise
+
+Edge Processing
+
+Arquitetura escalável orientada a eventos
+
+📊 Aplicação
+
+Projeto desenvolvido em contexto de iniciação científica com foco em análise de dados climáticos regionais e futura modelagem estatística.
+
+🚀 Próxima Etapa Estratégica
+
+Evoluir para arquitetura baseada em:
+
+MQTT Broker
+
+Pipeline de ingestão
+
+Armazenamento estruturado
+
+Dashboard analítico
+
+Transformando a estação em um mini ecossistema completo de dados.
