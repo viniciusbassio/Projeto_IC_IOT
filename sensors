@@ -1,0 +1,94 @@
+# ========= SENSORS - Weather Station =========
+# Camada de aquisição de dados físicos
+
+from machine import Pin, I2C, ADC
+from bmp280 import BMP280
+import time
+
+from config import (
+    I2C_SCL_PIN,
+    I2C_SDA_PIN,
+    BMP280_ADDRESS,
+    UV_ADC_PIN,
+    UV_ADC_ATTENUATION,
+    UV_ADC_WIDTH,
+    UV_SAMPLE_COUNT
+)
+
+
+class WeatherSensors:
+
+    def __init__(self):
+        self._init_bmp280()
+        self._init_uv()
+
+    # ==============================
+    # Inicialização BMP280
+    # ==============================
+        # ==============================
+    # Inicialização BMP280
+    # ==============================
+    def _init_bmp280(self):
+
+        self.i2c = I2C(
+            0,
+            scl=Pin(I2C_SCL_PIN),
+            sda=Pin(I2C_SDA_PIN),
+            freq=400000
+        )
+
+        devices = self.i2c.scan()
+        print("I2C detectados:", devices)
+
+        if BMP280_ADDRESS not in devices:
+            raise Exception(
+                "BMP280 não encontrado no endereço {}".format(BMP280_ADDRESS)
+            )
+
+        self.bmp = BMP280(self.i2c, addr=BMP280_ADDRESS)
+
+
+
+    # ==============================
+    # Inicialização GUVA
+    # ==============================
+    def _init_uv(self):
+        self.uv_adc = ADC(Pin(UV_ADC_PIN))
+
+        if UV_ADC_ATTENUATION == 11:
+            self.uv_adc.atten(ADC.ATTN_11DB)
+
+        if UV_ADC_WIDTH == 12:
+            self.uv_adc.width(ADC.WIDTH_12BIT)
+
+    # ==============================
+    # Leitura UV com filtro médio
+    # ==============================
+    def _read_uv_filtered(self):
+        total = 0
+
+        for _ in range(UV_SAMPLE_COUNT):
+            total += self.uv_adc.read()
+            time.sleep_ms(5)
+
+        return total / UV_SAMPLE_COUNT
+
+    # ==============================
+    # Leitura completa dos sensores
+    # ==============================
+    def read_all(self):
+        try:
+            temperatura = round(self.bmp.temperature, 2)
+            pressao = round(self.bmp.pressure/100, 2)  # hPa
+
+            uv_raw = round(self._read_uv_filtered(), 2)
+
+            return {
+                "temperatura_c": temperatura,
+                "pressao_hpa": pressao,
+                "uv_raw": uv_raw
+            }
+
+        except Exception as e:
+            raise Exception("Erro na leitura dos sensores: {}".format(e))
+
